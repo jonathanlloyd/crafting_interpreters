@@ -55,11 +55,30 @@ const (
 	EOF
 )
 
+var Keywords map[string]TokenType = map[string]TokenType{
+	"and":    AND,
+	"class":  CLASS,
+	"else":   ELSE,
+	"false":  FALSE,
+	"fun":    FUN,
+	"for":    FOR,
+	"if":     IF,
+	"nil":    NIL,
+	"or":     OR,
+	"print":  PRINT,
+	"return": RETURN,
+	"super":  SUPER,
+	"this":   THIS,
+	"true":   TRUE,
+	"var":    VAR,
+	"while":  WHILE,
+}
+
 type Token struct {
 	Type    TokenType
 	Lexeme  string
 	Literal interface{}
-	Line    int32
+	Line    int
 }
 
 func (t Token) String() string {
@@ -87,6 +106,22 @@ func (t Token) String() string {
 		typeStr = "SLASH"
 	case STAR:
 		typeStr = "STAR"
+	case BANG:
+		typeStr = "BANG"
+	case BANG_EQUAL:
+		typeStr = "BANG_EQUAL"
+	case EQUAL:
+		typeStr = "EQUAL"
+	case EQUAL_EQUAL:
+		typeStr = "EQUAL_EQUAL"
+	case GREATER:
+		typeStr = "GREATER"
+	case GREATER_EQUAL:
+		typeStr = "GREATER_EQUAL"
+	case LESS:
+		typeStr = "LESS"
+	case LESS_EQUAL:
+		typeStr = "LESS_EQUAL"
 	case IDENTIFIER:
 		typeStr = "IDENTIFIER"
 	case STRING:
@@ -131,5 +166,5 @@ func (t Token) String() string {
 		typeStr = "UNKNOWN"
 	}
 
-	return fmt.Sprintf("Token{Type:\"%s\", Line: %d, Lexeme: %s}", typeStr, t.Line, t.Lexeme)
+	return fmt.Sprintf("Token{Type: %s, Line: %d, Lexeme: %q, Literal: %v}", typeStr, t.Line, t.Lexeme, t.Literal)
 }

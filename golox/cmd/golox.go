@@ -9,8 +9,16 @@ import (
 	"github.com/jonathanlloyd/crafting_interpreters/golox/internal/lexer"
 )
 
-func run(source string) {
-	fmt.Printf("%s\n", source)
+func run(source string) error {
+	tokens, err := lexer.Scan(source)
+	if err != nil {
+		return err
+	}
+
+	for _, token := range tokens {
+		fmt.Println(token)
+	}
+	return nil
 }
 
 func runFile(filename string) {
@@ -18,7 +26,11 @@ func runFile(filename string) {
 	if err != nil {
 		panic(err)
 	}
-	run(string(source))
+
+	err = run(string(source))
+	if err != nil {
+		panic(err)
+	}
 }
 
 func runPrompt() {
@@ -29,8 +41,10 @@ func runPrompt() {
 	fmt.Printf(">>> ")
 	for scanner.Scan() {
 		source := scanner.Text()
-		_ = source
-		fmt.Println(lexer.Token{Type: lexer.IF, Line: 3, Literal: "if"})
+		err := run(source)
+		if err != nil {
+			fmt.Printf("Error: %s\n", err.Error())
+		}
 		fmt.Printf(">>> ")
 	}
 }
